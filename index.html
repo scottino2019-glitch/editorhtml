@@ -71,7 +71,6 @@
             display: flex;
             flex-direction: column;
             border-right: 1px solid #444;
-            position: relative;
         }
 
         .editor-header {
@@ -82,19 +81,10 @@
             color: #ccc;
         }
 
-        .editor-wrapper {
+        .editor {
             flex: 1;
-            position: relative;
-            overflow: hidden;
-        }
-
-        #htmlEditor {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            color: rgba(255, 255, 255, 0.7); /* Testo visibile */
-            caret-color: white;
+            background: #1e1e1e;
+            color: #d4d4d4;
             border: none;
             outline: none;
             padding: 15px;
@@ -103,26 +93,6 @@
             line-height: 1.5;
             resize: none;
             tab-size: 2;
-            z-index: 2;
-            white-space: pre;
-            overflow: auto;
-        }
-
-        #highlightContainer {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            padding: 15px;
-            background: #1e1e1e;
-            border: none;
-            overflow: auto;
-            white-space: pre;
-            word-wrap: normal;
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.5;
-            z-index: 1;
-            pointer-events: none; /* Permette di cliccare attraverso */
         }
 
         .preview-container {
@@ -160,36 +130,6 @@
             color: #888;
             display: flex;
             justify-content: space-between;
-        }
-
-        /* Colori per syntax highlighting */
-        .syntax-tag { color: #569cd6; }
-        .syntax-attr { color: #9cdcfe; }
-        .syntax-string { color: #ce9178; }
-        .syntax-comment { color: #6a9955; }
-        .syntax-doctype { color: #808080; }
-        .syntax-entity { color: #569cd6; }
-
-        /* Auto-completamento */
-        .autocomplete-box {
-            position: absolute;
-            background: #252526;
-            border: 1px solid #454545;
-            border-radius: 4px;
-            max-height: 150px;
-            overflow-y: auto;
-            z-index: 10;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .autocomplete-item {
-            padding: 4px 8px;
-            cursor: pointer;
-            color: #d4d4d4;
-        }
-
-        .autocomplete-item:hover, .autocomplete-item.selected {
-            background: #094771;
         }
 
         /* Mobile responsive */
@@ -238,18 +178,12 @@
             <div class="editor-header">
                 📝 Editor HTML
             </div>
-            <div class="editor-wrapper">
-                <div id="highlightContainer"></div>
-                <textarea 
-                    id="htmlEditor" 
-                    class="editor" 
-                    placeholder="Scrivi il tuo codice HTML qui..."
-                    oninput="updateHighlighting(); updatePreview();"
-                    onkeydown="handleKeyDown(event)"
-                    onscroll="syncScroll()"
-                    spellcheck="false"
-                ></textarea>
-            </div>
+            <textarea 
+                id="htmlEditor" 
+                class="editor" 
+                placeholder="Scrivi il tuo codice HTML qui..."
+                oninput="updatePreview()"
+            ></textarea>
         </div>
 
         <!-- Anteprima -->
@@ -271,10 +205,6 @@
     <script>
         let currentFileName = 'documento_senza_titolo.html';
         let isModified = false;
-        let autocompleteActive = false;
-        let autocompleteItems = [];
-        let autocompleteIndex = -1;
-        let autocompleteBox = null;
 
         // Template HTML predefinito
         const htmlTemplate = `<!DOCTYPE html>
@@ -299,36 +229,23 @@
 </body>
 </html>`;
 
-        // Lista di tag HTML per l'auto-completamento
-        const htmlTags = [
-            'div', 'span', 'p', 'a', 'img', 'ul', 'ol', 'li', 'table', 'tr', 
-            'td', 'th', 'form', 'input', 'button', 'select', 'option', 'textarea',
-            'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'section', 'article', 'header',
-            'footer', 'nav', 'main', 'aside', 'figure', 'figcaption', 'details',
-            'summary', 'mark', 'time', 'audio', 'video', 'source', 'canvas'
-        ];
-
         // Inizializza l'editor
         function initEditor() {
             const editor = document.getElementById('htmlEditor');
             
-            // Aggiorna le statistiche in tempo reale
+            // Aggiorna anteprima in tempo reale
             editor.addEventListener('input', function() {
                 updateStats();
                 markAsModified();
             });
 
-            // Crea il box per l'auto-completamento
-            autocompleteBox = document.createElement('div');
-            autocompleteBox.className = 'autocomplete-box';
-            autocompleteBox.style.display = 'none';
-            document.body.appendChild(autocompleteBox);
-
-            // Inizializza con contenuto vuoto
+            // Inizializza con il template
+            editor.value = htmlTemplate;
+            updatePreview();
             updateStats();
         }
 
-        // Nuovo file con template HTML
+        // Nuovo file
         function newFile() {
             if (isModified && !confirm('Ci sono modifiche non salvate. Continuare?')) {
                 return;
@@ -338,7 +255,6 @@
             currentFileName = 'documento_senza_titolo.html';
             isModified = false;
             updateFileInfo();
-            updateHighlighting();
             updatePreview();
             updateStats();
         }
@@ -354,7 +270,6 @@
                 currentFileName = file.name;
                 isModified = false;
                 updateFileInfo();
-                updateHighlighting();
                 updatePreview();
                 updateStats();
             };
@@ -393,7 +308,6 @@
             }
             
             document.getElementById('htmlEditor').value = '';
-            updateHighlighting();
             updatePreview();
             updateStats();
             markAsModified();
@@ -408,6 +322,9 @@
             doc.open();
             doc.write(content || '<html><body><p style="color: #666; text-align: center; margin-top: 50px; font-family: Arial;">Scrivi del codice HTML per vedere l\'anteprima</p></body></html>');
             doc.close();
+            
+            updateStats();
+            markAsModified();
         }
 
         // Aggiorna anteprima manualmente
@@ -436,231 +353,6 @@
             document.getElementById('fileInfo').textContent = currentFileName + status;
         }
 
-        // Evidenziazione sintattica
-        function updateHighlighting() {
-            const content = document.getElementById('htmlEditor').value;
-            const highlighted = highlightHTML(content);
-            document.getElementById('highlightContainer').innerHTML = highlighted;
-            syncScroll();
-        }
-
-        // Sincronizza lo scrolling tra textarea e evidenziazione
-        function syncScroll() {
-            const editor = document.getElementById('htmlEditor');
-            const highlight = document.getElementById('highlightContainer');
-            highlight.scrollTop = editor.scrollTop;
-            highlight.scrollLeft = editor.scrollLeft;
-        }
-
-        // Evidenziazione HTML
-        function highlightHTML(code) {
-            return code
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/<!DOCTYPE\s+[^>]+>/gi, '<span class="syntax-doctype">$&</span>')
-                .replace(/<!--[\s\S]*?-->/g, '<span class="syntax-comment">$&</span>')
-                .replace(/<(\/?)([a-zA-Z][a-zA-Z0-9:-]*)([^>]*)>/g, function(match, slash, tagName, attributes) {
-                    let attrHighlight = attributes.replace(/([a-zA-Z:-]+)(\s*=\s*)(["'])(.*?)\3/g, 
-                        '<span class="syntax-attr">$1</span>$2<span class="syntax-string">$3$4$3</span>');
-                    
-                    return '&lt;' + slash + '<span class="syntax-tag">' + tagName + '</span>' + 
-                           attrHighlight + '&gt;';
-                })
-                .replace(/\n/g, '<br>')
-                .replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
-                .replace(/  /g, '&nbsp;&nbsp;');
-        }
-
-        // Gestione auto-completamento
-        function showAutocomplete(prefix) {
-            if (!prefix) {
-                hideAutocomplete();
-                return;
-            }
-            
-            // Filtra i tag che iniziano con il prefisso
-            const matches = htmlTags.filter(tag => tag.startsWith(prefix.toLowerCase()));
-            
-            if (matches.length === 0) {
-                hideAutocomplete();
-                return;
-            }
-            
-            // Posiziona il box di auto-completamento
-            const editor = document.getElementById('htmlEditor');
-            const cursorPos = getCursorPosition();
-            autocompleteBox.innerHTML = '';
-            
-            // Aggiungi gli elementi all'elenco
-            matches.forEach((tag, index) => {
-                const item = document.createElement('div');
-                item.className = 'autocomplete-item';
-                item.textContent = tag;
-                item.onclick = () => selectAutocompleteItem(tag);
-                autocompleteBox.appendChild(item);
-            });
-            
-            // Mostra il box
-            autocompleteBox.style.display = 'block';
-            autocompleteBox.style.left = cursorPos.left + 'px';
-            autocompleteBox.style.top = (cursorPos.top + 20) + 'px';
-            autocompleteBox.style.width = '150px';
-            
-            autocompleteActive = true;
-            autocompleteItems = matches;
-            autocompleteIndex = 0;
-            updateAutocompleteSelection();
-        }
-
-        function hideAutocomplete() {
-            autocompleteBox.style.display = 'none';
-            autocompleteActive = false;
-            autocompleteItems = [];
-            autocompleteIndex = -1;
-        }
-
-        function selectAutocompleteItem(tag) {
-            const editor = document.getElementById('htmlEditor');
-            const value = editor.value;
-            const pos = editor.selectionStart;
-            
-            // Trova l'inizio del tag corrente
-            let start = pos - 1;
-            while (start >= 0 && /[a-zA-Z]/.test(value[start])) {
-                start--;
-            }
-            start++;
-            
-            // Sostituisci il testo
-            editor.value = value.substring(0, start) + tag + value.substring(pos);
-            editor.selectionStart = start + tag.length;
-            editor.selectionEnd = start + tag.length;
-            
-            hideAutocomplete();
-            updateHighlighting();
-            updatePreview();
-            updateStats();
-            markAsModified();
-        }
-
-        function updateAutocompleteSelection() {
-            const items = autocompleteBox.getElementsByClassName('autocomplete-item');
-            for (let i = 0; i < items.length; i++) {
-                if (i === autocompleteIndex) {
-                    items[i].classList.add('selected');
-                } else {
-                    items[i].classList.remove('selected');
-                }
-            }
-        }
-
-        function getCursorPosition() {
-            const editor = document.getElementById('htmlEditor');
-            const rect = editor.getBoundingClientRect();
-            const style = window.getComputedStyle(editor);
-            
-            const lineHeight = parseInt(style.lineHeight);
-            const paddingTop = parseInt(style.paddingTop);
-            const paddingLeft = parseInt(style.paddingLeft);
-            
-            // Calcola la posizione approssimativa del cursore
-            const lines = editor.value.substring(0, editor.selectionStart).split('\n');
-            const currentLine = lines.length;
-            const currentColumn = lines[lines.length - 1].length;
-            
-            return {
-                top: rect.top + paddingTop + (currentLine * lineHeight),
-                left: rect.left + paddingLeft + (currentColumn * 8) // Approssimazione larghezza carattere
-            };
-        }
-
-        function handleKeyDown(event) {
-            const editor = document.getElementById('htmlEditor');
-            
-            if (autocompleteActive) {
-                switch(event.key) {
-                    case 'ArrowDown':
-                        event.preventDefault();
-                        autocompleteIndex = (autocompleteIndex + 1) % autocompleteItems.length;
-                        updateAutocompleteSelection();
-                        break;
-                    case 'ArrowUp':
-                        event.preventDefault();
-                        autocompleteIndex = (autocompleteIndex - 1 + autocompleteItems.length) % autocompleteItems.length;
-                        updateAutocompleteSelection();
-                        break;
-                    case 'Enter':
-                    case 'Tab':
-                        event.preventDefault();
-                        if (autocompleteIndex >= 0) {
-                            selectAutocompleteItem(autocompleteItems[autocompleteIndex]);
-                        }
-                        break;
-                    case 'Escape':
-                        event.preventDefault();
-                        hideAutocomplete();
-                        break;
-                }
-            } else {
-                // Auto-completamento quando si digita <
-                if (event.key === '<') {
-                    setTimeout(() => {
-                        const pos = editor.selectionStart;
-                        if (pos > 0 && editor.value[pos-1] === '<') {
-                            showAutocomplete('');
-                        }
-                    }, 10);
-                }
-                
-                // Auto-completamento quando si digita dopo <
-                else if (/[a-zA-Z]/.test(event.key)) {
-                    const pos = editor.selectionStart;
-                    if (pos > 1 && editor.value[pos-2] === '<' && /[a-zA-Z]/.test(editor.value[pos-1])) {
-                        const tagStart = pos - 1;
-                        let start = tagStart;
-                        while (start >= 0 && /[a-zA-Z]/.test(editor.value[start])) {
-                            start--;
-                        }
-                        start++;
-                        
-                        const prefix = editor.value.substring(start, pos);
-                        setTimeout(() => showAutocomplete(prefix), 10);
-                    }
-                }
-                
-                // Auto-chiusura dei tag
-                else if (event.key === '>') {
-                    const pos = editor.selectionStart;
-                    const value = editor.value;
-                    
-                    // Verifica se stiamo chiudendo un tag di apertura
-                    if (pos > 2 && value[pos-2] !== '/') {
-                        let i = pos - 2;
-                        while (i >= 0 && value[i] !== '<') {
-                            i--;
-                        }
-                        
-                        if (i >= 0 && value[i+1] !== '/') {
-                            const tagNameMatch = value.substring(i+1, pos-1).match(/^([a-zA-Z][a-zA-Z0-9]*)/);
-                            if (tagNameMatch) {
-                                const tagName = tagNameMatch[1];
-                                setTimeout(() => {
-                                    editor.value = value.substring(0, pos) + `</${tagName}>` + value.substring(pos);
-                                    editor.selectionStart = pos;
-                                    editor.selectionEnd = pos;
-                                    updateHighlighting();
-                                    updatePreview();
-                                    updateStats();
-                                    markAsModified();
-                                }, 0);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         // Carica contenuto salvato all'avvio
         function loadSavedContent() {
             const savedContent = localStorage.getItem('htmlEditor_content');
@@ -670,13 +362,6 @@
                 document.getElementById('htmlEditor').value = savedContent;
                 currentFileName = savedFilename || 'documento_senza_titolo.html';
                 updateFileInfo();
-                updateHighlighting();
-                updatePreview();
-                updateStats();
-            } else {
-                // Inserisci il template se non c'è contenuto salvato
-                document.getElementById('htmlEditor').value = htmlTemplate;
-                updateHighlighting();
                 updatePreview();
                 updateStats();
             }
@@ -699,31 +384,6 @@
                         document.getElementById('fileInput').click();
                         break;
                 }
-            }
-            
-            // Nascondi auto-completamento con Ctrl+Spazio
-            if (e.ctrlKey && e.key === ' ') {
-                e.preventDefault();
-                if (autocompleteActive) {
-                    hideAutocomplete();
-                } else {
-                    const editor = document.getElementById('htmlEditor');
-                    const pos = editor.selectionStart;
-                    let start = pos;
-                    while (start > 0 && /[a-zA-Z]/.test(editor.value[start-1])) {
-                        start--;
-                    }
-                    const prefix = editor.value.substring(start, pos);
-                    showAutocomplete(prefix);
-                }
-            }
-        });
-
-        // Click outside per nascondere l'auto-completamento
-        document.addEventListener('click', function(e) {
-            if (autocompleteActive && !autocompleteBox.contains(e.target) && 
-                e.target !== document.getElementById('htmlEditor')) {
-                hideAutocomplete();
             }
         });
 
