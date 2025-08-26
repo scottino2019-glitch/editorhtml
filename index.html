@@ -13,52 +13,100 @@
         }
         
         body {
-            background-color: #1e1e1e;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
             color: #f0f0f0;
             line-height: 1.6;
             padding: 20px;
+            min-height: 100vh;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            background-color: rgba(30, 30, 30, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         }
         
         header {
             text-align: center;
             margin-bottom: 20px;
-            padding: 10px;
-            background-color: #2d2d2d;
+            padding: 20px;
+            background: linear-gradient(to right, #2d2d2d, #3d3d3d);
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
         
         h1 {
             color: #4ecdc4;
             margin-bottom: 10px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            color: #ffd166;
+            font-size: 1.2rem;
         }
         
         .controls {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: rgba(45, 45, 45, 0.8);
+            border-radius: 8px;
         }
         
-        button {
-            padding: 10px 15px;
+        button, .file-label {
+            padding: 12px 20px;
             border: none;
-            border-radius: 4px;
-            background-color: #4ecdc4;
-            color: #1e1e1e;
+            border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        button:hover {
-            background-color: #ff6b6b;
+        .primary-btn {
+            background: linear-gradient(to bottom, #4ecdc4, #2a9089);
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .primary-btn:hover {
+            background: linear-gradient(to bottom, #3dbdb4, #1a7069);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .secondary-btn {
+            background: linear-gradient(to bottom, #ff6b6b, #c44d4d);
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .secondary-btn:hover {
+            background: linear-gradient(to bottom, #ff5252, #a83d3d);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .file-label {
+            background: linear-gradient(to bottom, #45b7af, #2a8d85);
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .file-label:hover {
+            background: linear-gradient(to bottom, #3aa099, #1a6d67);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
         }
         
         .editor-container {
@@ -82,62 +130,117 @@
             background-color: #2d2d2d;
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
         }
         
         .panel-header {
-            background-color: #3c3c3c;
-            padding: 10px 15px;
+            background: linear-gradient(to right, #3c3c3c, #4c4c4c);
+            padding: 15px;
             font-weight: bold;
             color: #4ecdc4;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .panel-header span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         textarea {
             width: 100%;
             height: 400px;
-            padding: 15px;
+            padding: 20px;
             background-color: #1e1e1e;
             color: #f0f0f0;
             border: none;
             resize: vertical;
             font-family: 'Courier New', monospace;
-            font-size: 14px;
+            font-size: 15px;
             line-height: 1.5;
+            border-left: 4px solid #4ecdc4;
         }
         
         #preview {
             width: 100%;
             height: 400px;
-            padding: 15px;
+            padding: 20px;
             background-color: #f0f0f0;
             color: #1e1e1e;
             overflow: auto;
+            border-left: 4px solid #ff6b6b;
         }
         
         footer {
             text-align: center;
-            margin-top: 20px;
-            padding: 10px;
+            margin-top: 30px;
+            padding: 15px;
             font-size: 0.9rem;
-            color: #888;
+            color: #ccc;
+            border-top: 1px solid #444;
         }
         
         .file-input {
             display: none;
         }
         
-        .file-label {
-            padding: 10px 15px;
-            border-radius: 4px;
-            background-color: #45b7af;
-            color: #1e1e1e;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s;
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
         }
         
-        .file-label:hover {
-            background-color: #3aa099;
+        .modal-content {
+            background-color: #2d2d2d;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #4ecdc4;
+        }
+        
+        .close {
+            font-size: 24px;
+            cursor: pointer;
+            color: #ff6b6b;
+        }
+        
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            border: 2px solid #4ecdc4;
+            background-color: #1e1e1e;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .icon {
+            font-size: 18px;
         }
     </style>
 </head>
@@ -145,26 +248,40 @@
     <div class="container">
         <header>
             <h1>Editor HTML Avanzato</h1>
-            <p>Modifica, visualizza l'anteprima e scarica il tuo codice HTML</p>
+            <p class="subtitle">Modifica, visualizza l'anteprima e scarica il tuo codice HTML</p>
         </header>
         
         <div class="controls">
             <input type="file" id="fileInput" class="file-input" accept=".html,.htm">
-            <label for="fileInput" class="file-label">Carica File</label>
-            <button id="downloadBtn">Scarica</button>
-            <button id="resetBtn">Reset</button>
-            <button id="newBtn">Nuovo</button>
-            <button id="templateBtn">Template Base</button>
+            <label for="fileInput" class="file-label">
+                <span class="icon">📁</span> Carica File
+            </label>
+            <button id="downloadBtn" class="primary-btn">
+                <span class="icon">💾</span> Scarica
+            </button>
+            <button id="resetBtn" class="secondary-btn">
+                <span class="icon">🗑️</span> Reset
+            </button>
+            <button id="newBtn" class="secondary-btn">
+                <span class="icon">🆕</span> Nuovo
+            </button>
+            <button id="templateBtn" class="primary-btn">
+                <span class="icon">📋</span> Template Base
+            </button>
         </div>
         
         <div class="editor-container">
             <div class="editor-panel panel">
-                <div class="panel-header">Editor HTML</div>
+                <div class="panel-header">
+                    <span><span class="icon">✏️</span> Editor HTML</span>
+                </div>
                 <textarea id="editor" placeholder="Inserisci il tuo codice HTML qui..."></textarea>
             </div>
             
             <div class="preview-panel panel">
-                <div class="panel-header">Anteprima</div>
+                <div class="panel-header">
+                    <span><span class="icon">👁️</span> Anteprima</span>
+                </div>
                 <div id="preview"></div>
             </div>
         </div>
@@ -172,6 +289,20 @@
         <footer>
             <p>Editor HTML &copy; 2023 - Tutti i diritti riservati</p>
         </footer>
+    </div>
+
+    <div id="downloadModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Salva il tuo file</h2>
+                <span class="close">&times;</span>
+            </div>
+            <input type="text" id="fileName" class="modal-input" placeholder="Inserisci il nome del file (senza estensione)" value="pagina">
+            <div class="modal-buttons">
+                <button id="cancelDownload" class="secondary-btn">Annulla</button>
+                <button id="confirmDownload" class="primary-btn">Salva</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -183,6 +314,11 @@
             const resetBtn = document.getElementById('resetBtn');
             const newBtn = document.getElementById('newBtn');
             const templateBtn = document.getElementById('templateBtn');
+            const downloadModal = document.getElementById('downloadModal');
+            const fileNameInput = document.getElementById('fileName');
+            const confirmDownload = document.getElementById('confirmDownload');
+            const cancelDownload = document.getElementById('cancelDownload');
+            const closeModal = document.querySelector('.close');
             
             // Template iniziale
             const initialTemplate = `<!DOCTYPE html>
@@ -197,32 +333,51 @@
             line-height: 1.6;
             margin: 0;
             padding: 20px;
-            background-color: #f4f4f4;
+            background: linear-gradient(to right, #8e2de2, #4a00e0);
             color: #333;
         }
         .container {
             max-width: 800px;
             margin: auto;
             background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
         }
         h1 {
-            color: #2c3e50;
+            color: #4a00e0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        p {
+            margin-bottom: 20px;
+            font-size: 18px;
         }
         .btn {
             display: inline-block;
-            background: #3498db;
+            background: linear-gradient(to right, #8e2de2, #4a00e0);
             color: white;
-            padding: 10px 20px;
+            padding: 12px 25px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
         }
         .btn:hover {
-            background: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .features {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .feature {
+            text-align: center;
+            flex: 1;
+            padding: 20px;
         }
     </style>
 </head>
@@ -231,7 +386,24 @@
         <h1>Benvenuto nel Mio Sito</h1>
         <p>Questo è un template base per iniziare a creare la tua pagina web.</p>
         <p>Modifica il codice nell'editor per vedere le modifiche in tempo reale nell'anteprima.</p>
-        <a href="#" class="btn">Scopri di più</a>
+        <div style="text-align: center;">
+            <a href="#" class="btn">Scopri di più</a>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>Moderno</h3>
+                <p>Design responsive e aggiornato</p>
+            </div>
+            <div class="feature">
+                <h3>Intuitivo</h3>
+                <p>Facile da usare e personalizzare</p>
+            </div>
+            <div class="feature">
+                <h3>Efficiente</h3>
+                <p>Caricamento veloce e ottimizzato</p>
+            </div>
+        </div>
     </div>
 </body>
 </html>`;
@@ -261,15 +433,31 @@
                 }
             });
             
-            // Download del file
+            // Apri modale per download
             downloadBtn.addEventListener('click', function() {
+                downloadModal.style.display = 'flex';
+                fileNameInput.focus();
+            });
+            
+            // Chiudi modale
+            closeModal.addEventListener('click', function() {
+                downloadModal.style.display = 'none';
+            });
+            
+            cancelDownload.addEventListener('click', function() {
+                downloadModal.style.display = 'none';
+            });
+            
+            // Conferma download
+            confirmDownload.addEventListener('click', function() {
                 const content = editor.value;
+                const fileName = fileNameInput.value || 'pagina';
                 const blob = new Blob([content], { type: 'text/html' });
                 const url = URL.createObjectURL(blob);
                 
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'pagina.html';
+                a.download = `${fileName}.html`;
                 document.body.appendChild(a);
                 a.click();
                 
@@ -277,13 +465,16 @@
                 setTimeout(function() {
                     document.body.removeChild(a);
                     URL.revokeObjectURL(url);
+                    downloadModal.style.display = 'none';
                 }, 100);
             });
             
             // Reset editor
             resetBtn.addEventListener('click', function() {
-                editor.value = '';
-                updatePreview();
+                if (confirm('Sei sicuro di voler resettare il contenuto?')) {
+                    editor.value = '';
+                    updatePreview();
+                }
             });
             
             // Nuovo documento
@@ -299,6 +490,20 @@
                 if (confirm('Vuoi caricare il template base? Tutte le modifiche non salvate andranno perse.')) {
                     editor.value = initialTemplate;
                     updatePreview();
+                }
+            });
+            
+            // Chiudi modale cliccando fuori
+            window.addEventListener('click', function(e) {
+                if (e.target === downloadModal) {
+                    downloadModal.style.display = 'none';
+                }
+            });
+            
+            // Invio conferma il download
+            fileNameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    confirmDownload.click();
                 }
             });
         });
