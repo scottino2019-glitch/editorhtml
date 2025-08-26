@@ -251,6 +251,42 @@
             font-size: 18px;
         }
         
+        .save-path {
+            display: flex;
+            align-items: center;
+            background-color: #1e1e1e;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #444;
+        }
+        
+        .save-path-text {
+            flex-grow: 1;
+            padding: 8px;
+            background-color: #2d2d2d;
+            border-radius: 4px;
+            color: #ccc;
+            font-family: monospace;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .browse-btn {
+            margin-left: 10px;
+            padding: 8px 12px;
+            background: linear-gradient(to bottom, #5e60ce, #6930c3);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .browse-btn:hover {
+            background: linear-gradient(to bottom, #5390d9, #5e60ce);
+        }
+        
         .save-info {
             margin-top: 15px;
             padding: 10px;
@@ -258,6 +294,18 @@
             border-radius: 6px;
             font-size: 0.9rem;
             color: #ccc;
+        }
+        
+        .feature-list {
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+        
+        .feature-list li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
     </style>
 </head>
@@ -303,6 +351,19 @@
             </div>
         </div>
         
+        <div class="save-info">
+            <h3>Come salvare il file:</h3>
+            <ol class="feature-list">
+                <li><span class="icon">1️⃣</span> Clicca sul pulsante "Salva"</li>
+                <li><span class="icon">2️⃣</span> Inserisci il nome che vuoi dare al file</li>
+                <li><span class="icon">3️⃣</span> Clicca sul pulsante "Salva" nella finestra modale</li>
+                <li><span class="icon">4️⃣</span> Si aprirà la finestra di salvataggio del browser</li>
+                <li><span class="icon">5️⃣</span> Scegli la cartella dove salvare il file</li>
+                <li><span class="icon">6️⃣</span> Conferma il salvataggio</li>
+            </ol>
+            <p><strong>Nota:</strong> I browser non permettono di selezionare la cartella prima del salvataggio, ma ti chiederanno dove salvare il file quando cliccherai su "Salva".</p>
+        </div>
+        
         <footer>
             <p>Editor HTML &copy; 2023 - Tutti i diritti riservati</p>
         </footer>
@@ -319,7 +380,7 @@
             <input type="text" id="fileName" class="modal-input" placeholder="Inserisci il nome del file (senza estensione)" value="mio-documento">
             
             <div class="save-info">
-                <p>💡 <strong>Nota:</strong> Nella finestra di dialogo del browser, potrai scegliere la cartella dove salvare il file.</p>
+                <p>💡 <strong>Nota:</strong> Dopo aver cliccato su "Salva", si aprirà la finestra di dialogo del browser dove potrai scegliere la cartella di destinazione.</p>
             </div>
             
             <div class="modal-buttons">
@@ -493,7 +554,7 @@
                     downloadModal.style.display = 'none';
                     
                     // Messaggio di conferma
-                    alert(`File "${fileName}.html" salvato con successo!`);
+                    alert(`File "${fileName}.html" salvato con successo!\nHai scelto la cartella nella finestra di dialogo del browser.`);
                 }, 100);
             });
             
