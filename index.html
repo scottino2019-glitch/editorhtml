@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editor HTML Avanzato</title>
+    <title>Editor HTML</title>
     <style>
         * {
             box-sizing: border-box;
@@ -225,7 +225,7 @@
         .modal-input {
             width: 100%;
             padding: 12px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             border-radius: 6px;
             border: 2px solid #4ecdc4;
             background-color: #1e1e1e;
@@ -233,79 +233,14 @@
             font-size: 16px;
         }
         
-        .modal-label {
-            display: block;
-            margin-bottom: 8px;
-            color: #ffd166;
-            font-weight: bold;
-        }
-        
         .modal-buttons {
             display: flex;
             justify-content: flex-end;
             gap: 10px;
-            margin-top: 20px;
         }
         
         .icon {
             font-size: 18px;
-        }
-        
-        .save-path {
-            display: flex;
-            align-items: center;
-            background-color: #1e1e1e;
-            border-radius: 6px;
-            padding: 10px;
-            margin-top: 10px;
-            border: 1px solid #444;
-        }
-        
-        .save-path-text {
-            flex-grow: 1;
-            padding: 8px;
-            background-color: #2d2d2d;
-            border-radius: 4px;
-            color: #ccc;
-            font-family: monospace;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        
-        .browse-btn {
-            margin-left: 10px;
-            padding: 8px 12px;
-            background: linear-gradient(to bottom, #5e60ce, #6930c3);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .browse-btn:hover {
-            background: linear-gradient(to bottom, #5390d9, #5e60ce);
-        }
-        
-        .save-info {
-            margin-top: 15px;
-            padding: 10px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 6px;
-            font-size: 0.9rem;
-            color: #ccc;
-        }
-        
-        .feature-list {
-            margin: 20px 0;
-            padding-left: 20px;
-        }
-        
-        .feature-list li {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
     </style>
 </head>
@@ -322,7 +257,7 @@
                 <span class="icon">📁</span> Carica File
             </label>
             <button id="downloadBtn" class="primary-btn">
-                <span class="icon">💾</span> Salva
+                <span class="icon">💾</span> Scarica
             </button>
             <button id="resetBtn" class="secondary-btn">
                 <span class="icon">🗑️</span> Reset
@@ -351,19 +286,6 @@
             </div>
         </div>
         
-        <div class="save-info">
-            <h3>Come salvare il file:</h3>
-            <ol class="feature-list">
-                <li><span class="icon">1️⃣</span> Clicca sul pulsante "Salva"</li>
-                <li><span class="icon">2️⃣</span> Inserisci il nome che vuoi dare al file</li>
-                <li><span class="icon">3️⃣</span> Clicca sul pulsante "Salva" nella finestra modale</li>
-                <li><span class="icon">4️⃣</span> Si aprirà la finestra di salvataggio del browser</li>
-                <li><span class="icon">5️⃣</span> Scegli la cartella dove salvare il file</li>
-                <li><span class="icon">6️⃣</span> Conferma il salvataggio</li>
-            </ol>
-            <p><strong>Nota:</strong> I browser non permettono di selezionare la cartella prima del salvataggio, ma ti chiederanno dove salvare il file quando cliccherai su "Salva".</p>
-        </div>
-        
         <footer>
             <p>Editor HTML &copy; 2023 - Tutti i diritti riservati</p>
         </footer>
@@ -372,17 +294,10 @@
     <div id="downloadModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Salva il tuo file HTML</h2>
+                <h2>Salva il tuo file</h2>
                 <span class="close">&times;</span>
             </div>
-            
-            <label for="fileName" class="modal-label">Nome file:</label>
-            <input type="text" id="fileName" class="modal-input" placeholder="Inserisci il nome del file (senza estensione)" value="mio-documento">
-            
-            <div class="save-info">
-                <p>💡 <strong>Nota:</strong> Dopo aver cliccato su "Salva", si aprirà la finestra di dialogo del browser dove potrai scegliere la cartella di destinazione.</p>
-            </div>
-            
+            <input type="text" id="fileName" class="modal-input" placeholder="Inserisci il nome del file (senza estensione)" value="pagina">
             <div class="modal-buttons">
                 <button id="cancelDownload" class="secondary-btn">Annulla</button>
                 <button id="confirmDownload" class="primary-btn">Salva</button>
@@ -522,7 +437,6 @@
             downloadBtn.addEventListener('click', function() {
                 downloadModal.style.display = 'flex';
                 fileNameInput.focus();
-                fileNameInput.select();
             });
             
             // Chiudi modale
@@ -537,7 +451,7 @@
             // Conferma download
             confirmDownload.addEventListener('click', function() {
                 const content = editor.value;
-                const fileName = fileNameInput.value || 'mio-documento';
+                const fileName = fileNameInput.value || 'pagina';
                 const blob = new Blob([content], { type: 'text/html' });
                 const url = URL.createObjectURL(blob);
                 
@@ -552,9 +466,6 @@
                     document.body.removeChild(a);
                     URL.revokeObjectURL(url);
                     downloadModal.style.display = 'none';
-                    
-                    // Messaggio di conferma
-                    alert(`File "${fileName}.html" salvato con successo!\nHai scelto la cartella nella finestra di dialogo del browser.`);
                 }, 100);
             });
             
