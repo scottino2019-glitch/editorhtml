@@ -225,7 +225,7 @@
         .modal-input {
             width: 100%;
             padding: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border-radius: 6px;
             border: 2px solid #4ecdc4;
             background-color: #1e1e1e;
@@ -233,14 +233,31 @@
             font-size: 16px;
         }
         
+        .modal-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ffd166;
+            font-weight: bold;
+        }
+        
         .modal-buttons {
             display: flex;
             justify-content: flex-end;
             gap: 10px;
+            margin-top: 20px;
         }
         
         .icon {
             font-size: 18px;
+        }
+        
+        .save-info {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: #ccc;
         }
     </style>
 </head>
@@ -257,7 +274,7 @@
                 <span class="icon">📁</span> Carica File
             </label>
             <button id="downloadBtn" class="primary-btn">
-                <span class="icon">💾</span> Scarica
+                <span class="icon">💾</span> Salva
             </button>
             <button id="resetBtn" class="secondary-btn">
                 <span class="icon">🗑️</span> Reset
@@ -294,10 +311,17 @@
     <div id="downloadModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Salva il tuo file</h2>
+                <h2>Salva il tuo file HTML</h2>
                 <span class="close">&times;</span>
             </div>
-            <input type="text" id="fileName" class="modal-input" placeholder="Inserisci il nome del file (senza estensione)" value="pagina">
+            
+            <label for="fileName" class="modal-label">Nome file:</label>
+            <input type="text" id="fileName" class="modal-input" placeholder="Inserisci il nome del file (senza estensione)" value="mio-documento">
+            
+            <div class="save-info">
+                <p>💡 <strong>Nota:</strong> Nella finestra di dialogo del browser, potrai scegliere la cartella dove salvare il file.</p>
+            </div>
+            
             <div class="modal-buttons">
                 <button id="cancelDownload" class="secondary-btn">Annulla</button>
                 <button id="confirmDownload" class="primary-btn">Salva</button>
@@ -437,6 +461,7 @@
             downloadBtn.addEventListener('click', function() {
                 downloadModal.style.display = 'flex';
                 fileNameInput.focus();
+                fileNameInput.select();
             });
             
             // Chiudi modale
@@ -451,7 +476,7 @@
             // Conferma download
             confirmDownload.addEventListener('click', function() {
                 const content = editor.value;
-                const fileName = fileNameInput.value || 'pagina';
+                const fileName = fileNameInput.value || 'mio-documento';
                 const blob = new Blob([content], { type: 'text/html' });
                 const url = URL.createObjectURL(blob);
                 
@@ -466,6 +491,9 @@
                     document.body.removeChild(a);
                     URL.revokeObjectURL(url);
                     downloadModal.style.display = 'none';
+                    
+                    // Messaggio di conferma
+                    alert(`File "${fileName}.html" salvato con successo!`);
                 }, 100);
             });
             
